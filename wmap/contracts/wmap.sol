@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "hardhat/console.sol";
 
 // waste menagement assistive protocol
-contract Wmap is ERC721URIStorage {
+contract WMAP is ERC721URIStorage {
     using Counters for Counters.Counter;
     Counters.Counter private tokenIds;
     address payable owner;
