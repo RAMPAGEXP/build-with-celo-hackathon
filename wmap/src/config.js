@@ -1,2 +1,3 @@
-export const wmap = "0x6077035C63151D8F99daE2b1060213C1c362bE4d"
+
+  export const wmap = "0x017C1854185CeACE4ba01bb244c0B9afA55D5013"
   
