@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import LocationDetails from '../components/LocationDetails'
-// import LocationMap from '../components/LocationMap'
-// import StreetView from '../components/StreetView'
+import LocationMap from '../components/LocationMap'
+import StreetView from '../components/StreetView'
 import '../bootstrap-4.0.0-beta.2-dist/css/bootstrap.min.css'
 import '../App.css'
 import Map from "../components/Map";
