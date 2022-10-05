@@ -7,6 +7,7 @@ import "./App.css";
 // import Map from "./components/Map";
 import Home from "./Pages/Home";
 import Services from "./Pages/Services";
+import Navbar from "./components/Navbar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 class App extends Component {
@@ -14,6 +15,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <main>
+          <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
 
