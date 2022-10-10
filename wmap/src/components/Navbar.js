@@ -13,6 +13,9 @@ const Navbar = () => {
     const services = () => {
         navigate("/services");
     };
+    const MyDetails = () => {
+        navigate("/mydetails");
+    };
 
     return (
         <>
@@ -29,6 +32,9 @@ const Navbar = () => {
                         </li>
                         <li className="nav-item">
                             <a className="nav-link" onClick={services}>services</a>
+                        </li>
+                        <li className="nav-item">
+                            <a className="nav-link" onClick={MyDetails}>MyDetails</a>
                         </li>
                     </ul>
                 </div>
