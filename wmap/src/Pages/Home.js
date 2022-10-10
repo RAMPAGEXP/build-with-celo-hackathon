@@ -11,13 +11,16 @@ import Web3Modal from 'web3modal'
 import { wmap } from '../config'
 import WMAP from '../WMAPAbi.json'
 
+window.Buffer = require('buffer/').Buffer;
 const Home = () => {
   //Start
   //sets
-  // const projectId = fs.readFileSync(".infuraid").toString().trim() || '';
-  // const projectSecret = fs.readFileSync(".infurasecret").toString().trim() || '';
-  // const auth = `Basic ${Buffer.from(`${projectId}:${projectSecret}`).toString('base64')}`;
+  const projectId = '2Ez5uozgwI1uHzPE3d5lz5q6Doq';
+  const projectSecret = '840aabc179722af08b4610704b793f94';
+  const auth = `Basic ${Buffer.from(`${projectId}:${projectSecret}`).toString('base64')}`;
   const [location, setLocation] = useState();
+
+
     // let location;
     function getLocation() {
       if (navigator.geolocation) {
@@ -26,22 +29,27 @@ const Home = () => {
         document.getElementById("demo").innerHTML = "Geolocation is not supported by this browser.";
       }
     }
-  
+
+
     function showPosition(position) {
-      setLocation(position.coords.latitude + "," + position.coords.longitude)
+     
+      setLocation(position.coords.latitude + "," + position.coords.longitude);
     }
+    
+
+    
 
   const client = ipfsHttpClient({
     host: 'ipfs.infura.io',
     port: 5001,
     protocol: 'https',
-    // headers: {
-    //   authorization: auth,
-    // },
+    headers: {
+      authorization: auth,
+    },
   });
 
   const [fileUrl, setFileUrl] = useState(null)
-  const [formInput, updateFormInput] = useState({ OwnerName: '', verificationDetails: [''], memberName: [''], houseAddress: '' })
+  const [formInput, updateFormInput] = useState({ OwnerName: '', verificationDetails: [''], memberName: [''],lat:'',long:'', houseAddress: ''})
 
   async function onChange(e) {
     const file = e.target.files[0]
@@ -60,8 +68,8 @@ const Home = () => {
   }
 
   async function uploadToIPFS() {
-    const { OwnerName, verificationDetails, houseAddress, memberName, } = formInput
-    if (!OwnerName || !verificationDetails || !houseAddress || !memberName) return
+    const { OwnerName, verificationDetails, houseAddress, memberName } = formInput
+    if (!OwnerName || !verificationDetails || !houseAddress || !memberName  ) return
     /* first, upload to IPFS #####auctionprice*/
     const data = JSON.stringify({
       OwnerName, verificationDetails, houseAddress, memberName,
@@ -86,51 +94,60 @@ const Home = () => {
     /* next, create the item */
     const OwnerName = formInput.OwnerName;
     const verificationDetails = formInput.verificationDetails;
-    const houseAddress = formInput.houseAddress;
+  
+     //Pass Direct Value Of Live Loction
+  
+
+    const houseAddress = location;
     // const auctionprice = ethers.utils.parseUnits(formInput.auctionprice, 'ether')
 
     let contract = new ethers.Contract(wmap, WMAP.abi, signer)
     // let mintingPrice = await contract.getMintingPrice()
     // mintingPrice = mintingPrice.toString()
 
-    let transaction = await contract.registerHouse(OwnerName, verificationDetails, houseAddress)
+    let transaction = await contract.registerHouse(OwnerName, verificationDetails,houseAddress)
     await transaction.wait()
     alert("house registered")
   }
+  
+
   return (
     <>
 
-      <div class="space-y-20">
-        <div class="space-y-10">
-          <span for="name" class="nameInput">QR Code</span>
+      <div className="space-y-20">
+        <div className="space-y-10">
+          <span htmlFor="name" className="nameInput">QR Code</span>
 
         </div>
 
-        <div class="space-y-10">
-          <span for="name" class="nameInput">Owner Name</span>
-          <input id="name" type="text" class="form-control"
+        <div className="space-y-10">
+          <span htmlFor="name" className="nameInput">Owner Name</span>
+          <input id="name" type="text" className="form-control"
             placeholder="House's Owner Name"
             onChange={e => updateFormInput({ ...formInput, OwnerName: e.target.value })} />
         </div>
 
-        <div class="space-y-10">
-          <span class="nameInput">Verification Details </span>
+        <div className="space-y-10">
+          <span className="nameInput">Verification Details </span>
 
-          <input type="number" class="form-control"
+          <input type="number" className="form-control"
             onChange={e => updateFormInput({ ...formInput, verificationDetails: e.target.value })}
             placeholder="e. g. Enter Your Adharcard Number"></input>
 
         </div>
+    
 
-        <div class="space-y-10">
-          <span for="name" class="nameInput">Address</span>
-          <input id="name" type="text" class="form-control"
+        {/* <div className="space-y-10">
+          <span htmlFor="name" className="nameInput">Address</span>
+          <input id="name" type="text" className="form-control"
             placeholder="House's Owner Name" value={location}
             onChange={e => updateFormInput({ ...formInput, houseAddress: e.target.value })} />
-        </div>
-        <button onClick={getLocation}>get location</button>
-        <div class="space-y-10">
-          <div class="d-flex flex-column flex-md-row">
+        </div> */}
+       
+        <button onClick={getLocation}>Fetch location{location}</button>
+        
+        <div className="space-y-10">
+          <div className="d-flex flex-column flex-md-row">
             <button onClick={registerHouse}>Register house</button>
           </div>
         </div>

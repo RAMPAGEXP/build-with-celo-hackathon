@@ -9,6 +9,7 @@ import Home from "./Pages/Home";
 import Services from "./Pages/Services";
 import Navbar from "./components/Navbar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import MyDetails from "./Pages/MyDetails";
 
 class App extends Component {
   render() {
@@ -20,6 +21,7 @@ class App extends Component {
             <Route path="/" element={<Home />} />
 
             <Route path="/services" element={<Services />} />
+            <Route path="/mydetails" element={<MyDetails />} />
           </Routes>
         </main>
       </BrowserRouter>
