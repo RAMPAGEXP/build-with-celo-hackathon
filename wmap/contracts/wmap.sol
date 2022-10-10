@@ -43,7 +43,7 @@ contract WMAP is ERC721URIStorage {
     }
 
     // Register A New House
-    function registerHouse(string memory OwnerName,uint256 verificationDetails, string memory houseAddress ) public {
+    function registerHouse(string memory OwnerName,uint256 verificationDetails,string memory houseAddress) public {
         tokenIds.increment();
         uint256 newTokenId = tokenIds.current();
         _mint(msg.sender, newTokenId);
@@ -138,5 +138,27 @@ contract WMAP is ERC721URIStorage {
     function getGarbageCollectionDetails(uint256 tokenId) public view returns (garbageCollection memory) {
         garbageCollection memory items = idToGarbage[tokenId];
         return items;
+    }
+
+    function fetchHouse() public view returns (House[] memory) {
+      uint totalItemCount = tokenIds.current();
+      uint itemCount = 0;
+      uint currentIndex = 0;
+
+      for (uint i = 0; i < totalItemCount; i++) {
+        if (idToHouse[i + 1].OwnerAddress == msg.sender) {
+          itemCount += 1;
+        }
+      }
+      House[] memory items = new House[](itemCount);
+      for (uint i = 0; i < totalItemCount; i++) {
+        if (idToHouse[i + 1].OwnerAddress == msg.sender) {
+          uint currentId = i + 1;
+          House storage currentItem = idToHouse[currentId];
+          items[currentIndex] = currentItem;
+          currentIndex += 1;
+        }
+      }
+      return items;
     }
 }
