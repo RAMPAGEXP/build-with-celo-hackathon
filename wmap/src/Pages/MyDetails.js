@@ -12,10 +12,12 @@ import { wmap } from '../config'
 import WMAP from '../WMAPAbi.json'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-
+import QRCode from "qrcode.react";
 
 const client = ipfsHttpClient('https://wmap.infura.io:5001/api/v0')
 function MyDetails  ()  {
+  const [qrValue, setQrValue] = useState("jeftar");
+ 
     const [walletAddress, setWalletAddress] = useState("");
     const navigate = useNavigate()
     const [nfts, setNfts] = useState([])
@@ -85,7 +87,8 @@ function MyDetails  ()  {
             // tokenURI
           }
           return item
-       
+          
+
         }))
         setNfts(items)
         console.log(items)
@@ -95,14 +98,9 @@ function MyDetails  ()  {
       }
  
       
+  
         
 
-// const span = document.getElementById("span_Id");
-
-// const text1 = span.textContent;
-// const myArray = text1.split(" ")
-// let word = myArray[2]
-// console.log(word);
 
 
     return (
@@ -112,7 +110,13 @@ function MyDetails  ()  {
       <div className="space-y-20" key={i}>
         <div className="space-y-10">
           <span htmlFor="name" className="nameInput">QR Code</span>
-
+          <QRCode
+        id="qr-gen"
+        value={nft.OwnerName +','+ nft.OwnerAddress+','+ nft.houseAddress.split(',')[0] +','+ nft.houseAddress.split(',')[1]}
+        size={290}
+        level={"H"}
+        includeMargin={true}
+      />
         </div>
 
         <div className="space-y-10">
@@ -133,13 +137,9 @@ function MyDetails  ()  {
         </div>
 
         <div className="space-y-10">
-          <span htmlFor="name" id="span_Id" className="nameInput">Address : {nft.houseAddress} </span>
+          <span htmlFor="name" id="span_Id" className="nameInput">lat : {nft.houseAddress.split(',')[0]} </span>
+          <span htmlFor="name" id="span_Id" className="nameInput">lang : {nft.houseAddress.split(',')[1]} </span>
           
-
-          {/* <input id="name" type="text" className="form-control"
-            placeholder="House's Owner Name" 
-            onChange={e => updateFormInput({ ...formInput, houseAddress: e.target.value })} 
-            /> */}
         </div>
 
       
