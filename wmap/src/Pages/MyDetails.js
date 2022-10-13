@@ -1,10 +1,10 @@
 import React, { useState,useEffect } from 'react'
-// import LocationDetails from '../components/LocationDetails'
+
+import Map from "../components/Map";
 // import LocationMap from '../components/LocationMap'
 // import StreetView from '../components/StreetView'
 import '../bootstrap-4.0.0-beta.2-dist/css/bootstrap.min.css'
 import '../App.css'
-// import Map from "../components/Map";
 import { ethers } from 'ethers'
 import { create as ipfsHttpClient } from 'ipfs-http-client'
 import Web3Modal from 'web3modal'
@@ -12,11 +12,15 @@ import { wmap } from '../config'
 import WMAP from '../WMAPAbi.json'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import QRCode from "qrcode.react";
+import QRCode  from 'qrcode.react';
+import { uuid } from "uuidv4";
+import { WebrtcProvider } from "y-webrtc";
+
+
 
 const client = ipfsHttpClient('https://wmap.infura.io:5001/api/v0')
 function MyDetails  ()  {
-  const [qrValue, setQrValue] = useState("jeftar");
+  
  
     const [walletAddress, setWalletAddress] = useState("");
     const navigate = useNavigate()
@@ -82,12 +86,13 @@ function MyDetails  ()  {
             owner: i.OwnerAddress,
             
             OwnerName: i.OwnerName,
-          
+            verificationDetails: i.verificationDetails,
             houseAddress:i.houseAddress,
             // tokenURI
+           
           }
           return item
-          
+         
 
         }))
         setNfts(items)
@@ -97,27 +102,30 @@ function MyDetails  ()  {
 
       }
  
-      
-  
+      const currentUrl = new URL(document.location.origin);
+      const qrUrl = new URL(`${currentUrl.origin}/qrdetails`);
+
+      function Details(nft) {
+        console.log('nft:', nft);
+    
+      navigate(`/qrdetails?id=${nft.tokenId}&houseaddress=${nft.houseAddress}&ownername=${nft.OwnerName}&VerificationDetails=${nft.verificationDetails}`);
         
-
-
+      }
 
     return (
     <>
 {nfts.map((nft, i) => (
 
+
       <div className="space-y-20" key={i}>
         <div className="space-y-10">
           <span htmlFor="name" className="nameInput">QR Code</span>
-          <QRCode
-        id="qr-gen"
-        value={nft.OwnerName +','+ nft.OwnerAddress+','+ nft.houseAddress.split(',')[0] +','+ nft.houseAddress.split(',')[1]}
-        size={290}
-        level={"H"}
-        includeMargin={true}
-      />
+          <QRCode value={`${qrUrl}?id=${nft.tokenId}&houseaddress=${nft.houseAddress}&ownername=${nft.OwnerName}&VerificationDetails=${nft.verificationDetails}`}/>
+          <button onClick={() => Details(nft)}>clickme</button>
+        
         </div>
+
+        
 
         <div className="space-y-10">
           <span htmlFor="name" className="nameInput">Owner Name</span>
@@ -142,14 +150,7 @@ function MyDetails  ()  {
           
         </div>
 
-      
 
-        <button >get location</button>
-        <div className="space-y-10">
-          <div className="d-flex flex-column flex-md-row">
-            <button>Register house</button>
-          </div>
-        </div>
       </div>
       ))}
     </>

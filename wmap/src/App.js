@@ -10,6 +10,7 @@ import Services from "./Pages/Services";
 import Navbar from "./components/Navbar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MyDetails from "./Pages/MyDetails";
+import QrDetails from "./Pages/QrDetails";
 
 class App extends Component {
   render() {
@@ -22,6 +23,7 @@ class App extends Component {
 
             <Route path="/services" element={<Services />} />
             <Route path="/mydetails" element={<MyDetails />} />
+            <Route path="/qrdetails" element={<QrDetails />} />
           </Routes>
         </main>
       </BrowserRouter>

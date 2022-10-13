@@ -9,7 +9,7 @@ class Map extends Component {
 
     return (
       <div className="wrapper">
-        <LoadScript googleMapsApiKey="" libraries={LIBRARIES}>
+        <LoadScript googleMapsApiKey="AIzaSyBD7JOLQ1wlkarljBPfEJD4NVngzfUhCQY" libraries={LIBRARIES}>
           <GoogleMap
             id="map"
             center={center}
