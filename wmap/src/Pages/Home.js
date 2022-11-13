@@ -1,15 +1,13 @@
 import React, { useState } from 'react'
-// import LocationDetails from '../components/LocationDetails'
-// import LocationMap from '../components/LocationMap'
-// import StreetView from '../components/StreetView'
 import '../bootstrap-4.0.0-beta.2-dist/css/bootstrap.min.css'
 import '../App.css'
 // import Map from "../components/Map";
 import { ethers } from 'ethers'
 import { create as ipfsHttpClient } from 'ipfs-http-client'
 import Web3Modal from 'web3modal'
-import { wmap } from '../config'
-import WMAP from '../WMAPAbi.json'
+import { wmap_comm_address } from '../config_comm'
+import WMAP_COMM from '../WMAP_COMMUNITY.json'
+
 
 window.Buffer = require('buffer/').Buffer;
 const Home = () => {
@@ -21,23 +19,21 @@ const Home = () => {
   const [location, setLocation] = useState();
 
 
-    // let location;
-    function getLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
-      } else {
-        document.getElementById("demo").innerHTML = "Geolocation is not supported by this browser.";
-      }
+  // let location;
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+      document.getElementById("demo").innerHTML = "Geolocation is not supported by this browser.";
     }
+  }
+  function showPosition(position) {
+
+    setLocation(position.coords.latitude + "," + position.coords.longitude);
+  }
 
 
-    function showPosition(position) {
-     
-      setLocation(position.coords.latitude + "," + position.coords.longitude);
-    }
-    
 
-    
 
   const client = ipfsHttpClient({
     host: 'ipfs.infura.io',
@@ -49,7 +45,7 @@ const Home = () => {
   });
 
   const [fileUrl, setFileUrl] = useState(null)
-  const [formInput, updateFormInput] = useState({ OwnerName: '', verificationDetails: [''], memberName: [''],lat:'',long:'', houseAddress: ''})
+  const [formInput, updateFormInput] = useState({ OwnerName: '', verificationDetails2: [''], verificationDetails3: [''], verificationDetails1: [''], memberName: [''], lat: '', long: '', houseAddress: '' })
 
   async function onChange(e) {
     const file = e.target.files[0]
@@ -69,7 +65,7 @@ const Home = () => {
 
   async function uploadToIPFS() {
     const { OwnerName, verificationDetails, houseAddress, memberName } = formInput
-    if (!OwnerName || !verificationDetails || !houseAddress || !memberName  ) return
+    if (!OwnerName || !verificationDetails || !houseAddress || !memberName) return
     /* first, upload to IPFS #####auctionprice*/
     const data = JSON.stringify({
       OwnerName, verificationDetails, houseAddress, memberName,
@@ -92,68 +88,74 @@ const Home = () => {
     const signer = provider.getSigner()
 
     /* next, create the item */
+    var regexp = /^[2-9]{1}[0-9]{3}\s{1}[0-9]{4}\s{1}[0-9]{4}$/;
     const OwnerName = formInput.OwnerName;
-    const verificationDetails = formInput.verificationDetails;
-  
-     //Pass Direct Value Of Live Loction
-  
+    const verificationDetails = formInput.verificationDetails1 + ' ' + formInput.verificationDetails2 + ' ' + formInput.verificationDetails3;
 
+    //Pass Direct Value Of Live Loction
     const houseAddress = location;
-    // const auctionprice = ethers.utils.parseUnits(formInput.auctionprice, 'ether')
-
-    let contract = new ethers.Contract(wmap, WMAP.abi, signer)
-    // let mintingPrice = await contract.getMintingPrice()
-    // mintingPrice = mintingPrice.toString()
-
-    let transaction = await contract.registerHouse(OwnerName, verificationDetails,houseAddress)
-    await transaction.wait()
-    alert("house registered")
+    let contract = new ethers.Contract(wmap_comm_address, WMAP_COMM.abi, signer)
+    var x = verificationDetails;
+    if (regexp.test(x)) {
+      let aadharnumber = formInput.verificationDetails1 +  formInput.verificationDetails2 + formInput.verificationDetails3;
+      let transaction = await contract.registerHouse(OwnerName, aadharnumber, houseAddress)
+      await transaction.wait()
+      alert("house registered")
+    }
+    else {
+      window.alert("Invalid Aadhar no.");
+    }
   }
-  
 
-  return (
-    <>
 
-      <div className="space-y-20">
-        <div className="space-y-10">
-          <span htmlFor="name" className="nameInput">QR Code</span>
+    return (
+      <>
 
-        </div>
+        <div className="space-y-20">
+          <div className="space-y-10">
+          <h1>Register your house</h1>
+          </div>
 
-        <div className="space-y-10">
-          <span htmlFor="name" className="nameInput">Owner Name</span>
-          <input id="name" type="text" className="form-control"
-            placeholder="House's Owner Name"
-            onChange={e => updateFormInput({ ...formInput, OwnerName: e.target.value })} />
-        </div>
+          <div className="space-y-10">
+            <span htmlFor="name" className="nameInput">Owner Name</span>
+            <input id="name" type="text" className="form-control"
+              placeholder="House's Owner Name"
+              onChange={e => updateFormInput({ ...formInput, OwnerName: e.target.value })} />
+          </div>
+          <br />
 
-        <div className="space-y-10">
-          <span className="nameInput">Verification Details </span>
+          <div className="space-y-10">
+            <span className="nameInput">Verification Details: </span>
 
-          <input type="number" className="form-control"
-            onChange={e => updateFormInput({ ...formInput, verificationDetails: e.target.value })}
-            placeholder="e. g. Enter Your Adharcard Number"></input>
-
-        </div>
+            <input type="text" id="pin1" name="pin" maxlength="4" size="4" onChange={e => updateFormInput({ ...formInput, verificationDetails1: e.target.value })} />
     
+            <input type="text" id="pin2" name="pin" maxlength="4" size="4" onChange={e => updateFormInput({ ...formInput, verificationDetails2: e.target.value })}/>
+    
+            <input type="text" id="pin3" name="pin" maxlength="4" size="4" onChange={e => updateFormInput({ ...formInput, verificationDetails3: e.target.value })}/>
 
-        {/* <div className="space-y-10">
-          <span htmlFor="name" className="nameInput">Address</span>
-          <input id="name" type="text" className="form-control"
-            placeholder="House's Owner Name" value={location}
-            onChange={e => updateFormInput({ ...formInput, houseAddress: e.target.value })} />
-        </div> */}
-       
-        <button onClick={getLocation}>Fetch location{location}</button>
-        
-        <div className="space-y-10">
-          <div className="d-flex flex-column flex-md-row">
-            <button onClick={registerHouse}>Register house</button>
+            {/* <input type="text" className="form-control"
+              onChange={e => updateFormInput({ ...formInput, verificationDetails: e.target.value })}
+              placeholder="e. g. Enter Your Adharcard Number"></input> */}
+
+          </div>
+          <br />
+
+
+          <div className="space-y-10">
+            <span htmlFor="name" className="nameInput">Address: </span>
+            <span>{location}</span>
+          </div>
+
+          <button onClick={getLocation}>Fetch location</button>
+          <div className="space-y-10">
+            <br />
+            <div className="d-flex flex-column flex-md-row">
+              <button onClick={registerHouse}>Register house</button>
+            </div>
           </div>
         </div>
-      </div>
-    </>
-  )
-}
+      </>
+    )
+  }
 
-export default Home
+  export default Home

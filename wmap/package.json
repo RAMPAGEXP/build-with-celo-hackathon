@@ -14,20 +14,15 @@
     "buffer": "^6.0.3",
     "ethers": "^5.7.1",
     "fs": "^0.0.1-security",
-    "google-map-react": "^2.2.0",
     "hardhat": "^2.11.2",
     "ipfs-http-client": "^58.0.1",
-    "qrcode.react": "^3.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-qr-code": "^2.0.8",
     "react-router-dom": "^6.4.1",
-    "react-scripts": "^5.0.1",
-    "util": "^0.12.4",
-    "uuidv4": "^6.2.13",
+    "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4",
-    "web3modal": "^1.9.9",
-    "y-webrtc": "^10.2.3",
-    "yjs": "^13.5.41"
+    "web3modal": "^1.9.9"
   },
   "scripts": {
     "start": "react-scripts start",
